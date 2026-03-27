@@ -6,4 +6,9 @@
   body {
     @apply bg-white text-gray-900;
   }
+
+  /* Changed: Improve base readability */
+  h1, h2, h3, h4 {
+    @apply tracking-tight;
+  }
 }

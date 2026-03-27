@@ -6,7 +6,7 @@ export default function CollectionCard({ collection }: { collection: Collection 
 
   return (
     <Link href={`/collections/${collection.slug}`} className="group">
-      <div className="border border-gray-200 rounded-xl overflow-hidden">
+      <div className="border border-gray-200 rounded-2xl overflow-hidden hover:-translate-y-1 hover:shadow-lg transition bg-white">
         {heroImage ? (
           <img
             src={`${heroImage.imgix_url}?w=1200&h=700&fit=crop&auto=format,compress`}
