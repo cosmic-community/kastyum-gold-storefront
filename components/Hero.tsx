@@ -8,19 +8,43 @@ type HeroSlide = {
   imageUrl: string
 }
 
-export default function Hero({ slides }: { slides: HeroSlide[] }) {
+type HeroProps = {
+  slides?: HeroSlide[]
+  title?: string
+  subtitle?: string
+  imageUrl?: string
+}
+
+export default function Hero({ slides, title, subtitle, imageUrl }: HeroProps) {
+  // Changed: Allow single-slide props or slides array to coexist safely
+  const fallbackSlides: HeroSlide[] =
+    title || subtitle || imageUrl
+      ? [
+          {
+            title: title ?? 'Kastyum Gold',
+            subtitle: subtitle ?? '',
+            imageUrl: imageUrl ?? ''
+          }
+        ]
+      : []
+
+  // Changed: Normalize to a single slides array for rendering
+  const normalizedSlides = slides && slides.length > 0 ? slides : fallbackSlides
+
   const [activeIndex, setActiveIndex] = useState(0)
-  const activeSlide = slides[activeIndex]
+  const activeSlide = normalizedSlides[activeIndex]
 
   const handleNext = () => {
-    setActiveIndex((prev) => (prev + 1) % slides.length)
+    if (normalizedSlides.length === 0) return
+    setActiveIndex((prev) => (prev + 1) % normalizedSlides.length)
   }
 
   const handlePrev = () => {
-    setActiveIndex((prev) => (prev - 1 + slides.length) % slides.length)
+    if (normalizedSlides.length === 0) return
+    setActiveIndex((prev) => (prev - 1 + normalizedSlides.length) % normalizedSlides.length)
   }
 
-  if (!activeSlide) {
+  if (!activeSlide || !activeSlide.imageUrl) {
     return null
   }
 
@@ -77,7 +101,7 @@ export default function Hero({ slides }: { slides: HeroSlide[] }) {
           ›
         </button>
         <div className="flex gap-2 ml-2">
-          {slides.map((_, index) => (
+          {normalizedSlides.map((_, index) => (
             <button
               key={`hero-dot-${index}`}
               onClick={() => setActiveIndex(index)}
